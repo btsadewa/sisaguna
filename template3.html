@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pilah Olah Sampah</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800&display=swap">
+<style>
+/* Tema pamflet kartun: langit biru, papan kayu, tong sampah berwajah, kartu krem bergaris putus-putus, hijau daun dan kuning. */
+:root{
+  --sky:#9FD8F5; --sky-2:#D3EEFC; --meadow:#E9F6E0; --cream:#FFF8E6; --surface:#FFFFFF;
+  --ink:#14301F; --muted:#5B4A2E; --line:#E6D3A8;
+  --wood:#F0C98F; --wood-d:#C9955A; --wood-line:#A9733A;
+  --forest:#17562F; --forest-2:#0E3A1E; --lime:#FFD84D; --on-forest:#EAF7E6;
+  --organik:#17803A; --organik-soft:#DDF4D6; --organik-strong:#3DB54A;
+  --plastik:#1A5FB8; --plastik-soft:#DCEBFF; --plastik-strong:#3B8FEA;
+  --dasar:#A65500; --dasar-soft:#FFEFB8;
+  --font-h:"Baloo 2","Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --font:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--meadow);color:var(--ink);font-family:var(--font);font-weight:500;font-size:clamp(15.5px,1.2vw + 12px,17px);line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--cream)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--font-h);margin:0;font-weight:800;line-height:1.1;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--plastik-strong);outline-offset:3px}
+section{scroll-margin-top:84px}
+
+/* navbar */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(255,248,230,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:4px solid var(--wood)}
+.navin{display:flex;align-items:center;gap:16px;min-height:68px}
+.brandlink{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+.logo{width:44px;height:44px;border-radius:50%;background:var(--forest);color:var(--lime);display:grid;place-items:center;font-family:var(--font-h);font-weight:800;font-size:.85rem;flex:none;overflow:hidden;border:3px solid var(--organik-strong)}
+.logo img{width:100%;height:100%;object-fit:cover}
+.bt{display:grid;min-width:0;line-height:1.2}
+.bt b{font-family:var(--font-h);font-weight:800;font-size:1.2rem;color:var(--forest)}
+.bt small{font-size:.72rem;font-weight:700;color:var(--muted);overflow-wrap:anywhere}
+.links-nav{display:flex;gap:6px;margin-left:auto}
+.links-nav a{text-decoration:none;font-weight:800;font-size:.95rem;padding:8px 16px;border-radius:99px;color:var(--forest)}
+.links-nav a:hover{background:var(--organik-soft)}
+.cta-sm{text-decoration:none;font-family:var(--font-h);font-weight:800;font-size:1rem;background:var(--lime);color:var(--ink);padding:8px 20px;border-radius:99px;border:3px solid var(--forest);box-shadow:0 3px 0 var(--forest);white-space:nowrap}
+.cta-sm:hover{background:#FFE37A}
+.menu{display:none;margin-left:auto;font-family:var(--font-h);font-weight:800;font-size:1rem;border:3px solid var(--forest);background:var(--lime);color:var(--ink);border-radius:99px;padding:6px 18px;min-height:44px;cursor:pointer;box-shadow:0 3px 0 var(--forest)}
+@media (max-width:820px){
+  .menu{display:inline-flex;align-items:center}
+  .cta-sm{display:none}
+  .links-nav{display:none;position:absolute;left:0;right:0;top:100%;margin:0;flex-direction:column;gap:2px;background:var(--cream);border-bottom:4px solid var(--wood);padding:8px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  .links-nav.open{display:flex}
+  .links-nav a{padding:13px 14px;font-size:1.05rem}
+}
+
+/* hero: papan kayu di atas langit */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--sky) 0,var(--sky-2) 78%,var(--meadow) 100%)}
+.hero .decor{position:absolute;pointer-events:none}
+.hero .cloud1{left:-30px;top:40px;width:170px;opacity:.95}
+.hero .cloud2{right:6%;top:24px;width:130px;opacity:.9}
+.hero .leaf1{left:-20px;top:-14px;width:130px}
+.hero .leaf2{right:-24px;top:-10px;width:130px;transform:scaleX(-1)}
+.hero .wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:clamp(36px,6vw,70px);display:block}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,56px);align-items:center;padding-block:clamp(40px,7vw,80px) clamp(64px,10vw,110px)}
+@media (max-width:900px){.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+.signboard{position:relative;z-index:0;background:
+  repeating-linear-gradient(176deg,rgba(169,115,58,.14) 0 2px,transparent 2px 15px),
+  linear-gradient(180deg,#F6D7A3,var(--wood));
+  border:5px solid var(--wood-line);border-radius:30px;padding:clamp(22px,4vw,36px) clamp(18px,4vw,36px) clamp(22px,4vw,32px);box-shadow:0 8px 0 rgba(120,76,28,.35);text-align:center}
+.signboard::before,.signboard::after{content:"";position:absolute;z-index:-1;bottom:-34px;width:28px;height:50px;background:var(--wood-d);border:4px solid var(--wood-line);border-radius:6px}
+.signboard::before{left:14%}.signboard::after{right:14%}
+.pill{display:inline-block;font-family:var(--font-h);font-size:.9rem;font-weight:700;background:var(--forest);color:#fff;padding:5px 18px;border-radius:99px;margin-bottom:12px;overflow-wrap:anywhere;border:3px solid #2B7A44}
+.hero h1{font-size:clamp(2.2rem,7vw,4.2rem);color:var(--forest);line-height:1.02;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:#FFC800;-webkit-text-stroke:2px var(--forest);paint-order:stroke fill;text-shadow:0 4px 0 rgba(14,58,30,.3)}
+.cream-card{margin-top:clamp(40px,6vw,52px);background:var(--cream);border:3px dashed #E0B866;border-radius:26px;padding:clamp(18px,3.5vw,28px);box-shadow:0 6px 0 rgba(120,76,28,.15)}
+.hero .lead{font-size:clamp(1rem,2.3vw,1.12rem);color:var(--muted);max-width:52ch;font-weight:600}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.btn{font-family:var(--font-h);font-weight:800;font-size:1.05rem;text-decoration:none;padding:10px 26px;border-radius:99px;border:3px solid var(--forest);cursor:pointer;display:inline-flex;align-items:center;min-height:48px}
+.btn.p{background:var(--organik-strong);color:#fff;box-shadow:0 4px 0 var(--forest);text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn.p:hover{background:#34A340}
+.btn.s{background:var(--surface);color:var(--forest);box-shadow:0 4px 0 var(--forest)}
+.btn.s:hover{background:var(--organik-soft)}
+.btn:active,.cta-sm:active{transform:translateY(3px);box-shadow:0 1px 0 var(--forest)}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+.metrics div{display:grid;justify-items:center;text-align:center;background:var(--surface);border:2.5px solid var(--line);border-radius:18px;padding:10px 6px}
+.metrics b{font-family:var(--font-h);font-size:1.7rem;font-weight:800;line-height:1.05;color:var(--forest);font-variant-numeric:tabular-nums}
+.metrics span{font-size:.78rem;font-weight:700;color:var(--muted);line-height:1.25}
+.visual{position:relative;max-width:480px;width:100%;justify-self:center}
+.visual svg{display:block;width:100%;height:auto;overflow:visible}
+.chip-f{position:absolute;background:var(--wood);border:3px solid var(--wood-line);border-radius:14px;padding:4px 14px;font-family:var(--font-h);font-size:.95rem;font-weight:700;color:var(--ink);box-shadow:0 4px 0 rgba(120,76,28,.35);white-space:nowrap}
+.chip-f.a{left:2%;top:12%;transform:rotate(-5deg)}.chip-f.b{right:0;top:46%;transform:rotate(4deg)}.chip-f.c{left:6%;bottom:8%;transform:rotate(-3deg)}
+@media (prefers-reduced-motion:no-preference){
+  .bin-l{animation:bob 4.5s ease-in-out infinite}
+  .bin-r{animation:bob 4.5s ease-in-out -2.2s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+}
+
+/* pita angka */
+.stats{background:var(--forest);color:var(--on-forest);border-radius:clamp(22px,4vw,34px);padding:clamp(22px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:clamp(18px,3vw,36px);margin-block:clamp(8px,2vw,20px) clamp(20px,4vw,40px);outline:3px dashed rgba(255,216,77,.55);outline-offset:-12px;box-shadow:0 8px 0 var(--forest-2)}
+.stat b{display:block;font-family:var(--font-h);font-size:clamp(2.2rem,6vw,3.3rem);font-weight:800;line-height:1;color:var(--lime);font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-block:8px;font-size:.95rem;font-weight:600}
+.stat a{font-size:.85rem;font-weight:800;color:var(--lime)}
+
+/* jalur */
+.sec{padding-block:clamp(36px,7vw,80px)}
+.sec-h{margin-bottom:clamp(20px,4vw,34px)}
+.sec-h h2{display:inline-block;font-size:clamp(1.6rem,4.6vw,2.5rem);background:var(--forest);color:#fff;padding:.12em .7em .2em;border-radius:99px;box-shadow:0 5px 0 var(--forest-2);border:3px solid #2B7A44}
+.sec-h p{margin-top:16px;color:var(--muted);font-weight:700;max-width:56ch}
+.lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:22px}
+.lane{font:inherit;text-align:left;cursor:pointer;border:4px solid var(--forest);border-radius:30px;padding:clamp(22px,4vw,34px);display:grid;gap:8px;min-height:230px;align-content:end;position:relative;overflow:hidden;color:#fff;box-shadow:0 8px 0 var(--forest-2)}
+.lane.k{background:#2A6FC9} .lane.h{background:#1F8A3C}
+.lane::after{content:"";position:absolute;right:-50px;top:-50px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.18)}
+.lane::before{content:"";position:absolute;right:26px;top:26px;width:54px;height:54px;border-radius:50%;background:var(--lime);border:3px solid var(--forest);z-index:1}
+.lane.h::before{border-radius:50% 0 50% 0}
+.lane .lbl{font-family:var(--font-h);font-size:.9rem;font-weight:700;background:rgba(255,255,255,.22);justify-self:start;padding:2px 14px;border-radius:99px}
+.lane .big{font-family:var(--font-h);font-size:clamp(2.4rem,6vw,3.4rem);font-weight:800;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.25)}
+.lane .sub{font-size:1rem;max-width:34ch;font-weight:700}
+.lane .go{margin-top:10px;font-family:var(--font-h);font-weight:700;font-size:1.05rem;display:inline-flex;align-items:center;gap:8px}
+.lane .go::after{content:"\2193";display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--lime);color:var(--ink);font-size:1rem;border:2.5px solid var(--forest)}
+@media (prefers-reduced-motion:no-preference){.lane,.item,.btn,.cta-sm,.chip{transition:transform .15s,box-shadow .15s,background .15s}.lane:hover{transform:translateY(-4px)}}
+
+/* katalog */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--font-h);font-weight:700;font-size:1rem;padding:4px 18px;min-height:44px;border-radius:99px;border:3px solid var(--line);background:var(--cream);color:var(--forest);cursor:pointer}
+.chip:hover{border-color:var(--organik-strong)}
+.chip[aria-pressed="true"]{background:var(--forest);color:#fff;border-color:var(--forest)}
+.search{flex:1 1 220px;min-width:0}
+.search input{width:100%;font:inherit;font-weight:600;font-size:1rem;padding:9px 18px;min-height:44px;border:3px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink)}
+.ghost{font-family:var(--font-h);font-size:1rem;font-weight:700;padding:4px 18px;min-height:44px;border:3px solid var(--forest);border-radius:99px;background:var(--surface);color:var(--forest);cursor:pointer;box-shadow:0 3px 0 var(--forest)}
+.ghost:hover{background:var(--organik-soft)}
+.count{font-size:.88rem;font-weight:800;color:var(--muted);margin-bottom:16px}
+@media (max-width:560px){.tools{display:grid;grid-template-columns:1fr}}
+.list{display:grid;gap:14px}
+.item{background:var(--cream);border:3px solid var(--line);border-radius:24px;min-width:0;overflow:hidden;box-shadow:0 5px 0 rgba(120,76,28,.15)}
+.item.plastik{--c:var(--plastik);--cs:var(--plastik-soft)}
+.item.organik{--c:var(--organik);--cs:var(--organik-soft)}
+.item.dasar{--c:var(--dasar);--cs:var(--dasar-soft)}
+.item[open]{border-color:var(--c);background:#FFFDF5}
+.item summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 18px;align-items:center;padding:16px 20px;min-height:64px}
+.item summary::-webkit-details-marker{display:none}
+.item summary:hover{background:var(--cs)}
+.tag{font-family:var(--font-h);font-size:.9rem;font-weight:700;padding:2px 16px;border-radius:99px;background:var(--c);color:#fff;white-space:nowrap}
+.head{display:grid;gap:3px;min-width:0}
+.item h3{font-size:clamp(1.2rem,3.6vw,1.45rem);color:var(--forest);overflow-wrap:anywhere}
+.peek{font-size:.92rem;color:var(--muted);font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item[open] .peek{display:none}
+.chev{width:38px;height:38px;border-radius:50%;background:var(--cs);border:3px solid var(--c);position:relative;flex:none}
+.chev::before,.chev::after{content:"";position:absolute;left:50%;top:50%;background:var(--c);border-radius:2px;transform:translate(-50%,-50%)}
+.chev::before{width:14px;height:3px}
+.chev::after{width:3px;height:14px}
+.item[open] .chev::after{display:none}
+.body{margin:0 20px;padding:18px 0 22px;border-top:3px dashed var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.body p{margin-bottom:14px;font-size:.98rem}
+.body dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:.9rem}
+.body dt{font-weight:800;color:var(--c)} .body dd{margin:0;font-weight:600}
+.links{background:var(--cs);border-radius:20px;padding:16px 18px;display:grid;gap:14px;align-self:start;min-width:0}
+.links h4{margin:0 0 4px;font-size:1.05rem;color:var(--c);font-weight:700}
+.links ul{list-style:none;margin:0;padding:0}
+.links li a{display:block;padding:8px 0 8px 24px;position:relative;font-size:.93rem;font-weight:700;overflow-wrap:anywhere;border-bottom:2px dotted rgba(20,48,31,.18);text-decoration:none}
+.links li:last-child a{border-bottom:0}
+.links li a:hover{text-decoration:underline}
+.links li a::before{content:"\2713";position:absolute;left:0;top:.7em;width:17px;height:17px;border-radius:50%;background:var(--c);color:#fff;font-size:.65rem;line-height:17px;text-align:center}
+.more{font-family:var(--font-h);font-size:1rem;font-weight:700;color:var(--c);padding-block:4px}
+@media (max-width:760px){.body{grid-template-columns:minmax(0,1fr);gap:18px}}
+@media (max-width:560px){
+  .item summary{grid-template-columns:minmax(0,1fr) auto;padding:14px 16px}
+  .item summary .tag{grid-column:1/-1;justify-self:start}
+  .body{margin:0 16px}
+}
+.empty{padding:30px 0;color:var(--muted);font-weight:700}
+
+/* uji pilah */
+.quizband{position:relative;background:radial-gradient(circle at 12% 18%,rgba(255,255,255,.07) 0 5px,transparent 6px) 0 0/54px 54px,var(--forest);color:var(--on-forest);border-radius:clamp(26px,5vw,52px) clamp(26px,5vw,52px) 0 0}
+.quizband .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,56px);align-items:center;padding-block:clamp(40px,8vw,88px)}
+@media (max-width:860px){.quizband .wrap{grid-template-columns:minmax(0,1fr)}}
+.quizband h2{display:inline-block;font-size:clamp(2.1rem,6vw,3.4rem);color:var(--ink);background:var(--lime);padding:.05em .6em .15em;border-radius:20px;transform:rotate(-2deg);box-shadow:0 6px 0 rgba(0,0,0,.3);border:3px solid #E5B800}
+.quizband .intro{margin-top:22px;max-width:38ch;font-weight:700;font-size:1.05rem}
+.quiz{background:var(--cream);color:var(--ink);border:5px solid var(--wood-line);border-radius:30px;padding:clamp(20px,4vw,34px);display:grid;gap:16px;min-width:0;box-shadow:0 8px 0 rgba(0,0,0,.28)}
+.qtop{display:flex;justify-content:space-between;gap:12px;font-family:var(--font-h);font-size:1rem;font-weight:700;color:var(--muted)}
+.qitem{font-family:var(--font-h);font-weight:800;font-size:clamp(1.8rem,6vw,2.6rem);line-height:1.05;color:var(--forest);min-height:3.4rem;display:flex;align-items:center;overflow-wrap:anywhere}
+.qbins{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.qbin{font-family:var(--font-h);font-weight:800;font-size:clamp(1rem,3.6vw,1.2rem);padding:14px 8px;min-height:58px;border-radius:18px;border:4px solid var(--forest);cursor:pointer;color:#fff;box-shadow:0 5px 0 var(--forest-2);text-shadow:0 1px 0 rgba(0,0,0,.3)}
+.qbin.k{background:#2A6FC9} .qbin.h{background:#1F8A3C}
+.qbin:hover:not(:disabled){filter:brightness(1.08)}
+.qbin:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--forest-2)}
+.qbin:disabled{opacity:.55;cursor:default;box-shadow:none}
+.fb{margin:0;min-height:3.4em;font-size:.98rem;font-weight:600}
+.fb strong{margin-right:6px;font-family:var(--font-h);font-size:1.1rem}
+.fb.ok strong{color:var(--organik)} .fb.no strong{color:#B3261E}
+.next{font-family:var(--font-h);font-weight:800;font-size:1.05rem;background:var(--lime);color:var(--ink);border:3px solid var(--forest);border-radius:99px;padding:6px 26px;min-height:46px;cursor:pointer;justify-self:start;box-shadow:0 4px 0 var(--forest)}
+.next:active{transform:translateY(3px);box-shadow:0 1px 0 var(--forest)}
+@media (max-width:360px){.qbins{grid-template-columns:1fr}}
+
+/* footer */
+footer{background:var(--forest-2);color:var(--on-forest);font-size:.93rem;font-weight:600}
+.fgrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,.8fr) minmax(0,1.2fr);gap:28px 40px;padding-block:clamp(32px,6vw,56px)}
+@media (max-width:820px){.fgrid{grid-template-columns:minmax(0,1fr)}}
+footer h4{margin:0 0 10px;font-size:1.15rem;color:var(--lime);font-weight:700}
+footer .fb-name{font-family:var(--font-h);font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+footer a{color:var(--on-forest);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.fbar{border-top:3px dashed rgba(255,216,77,.35);padding-block:16px;font-family:var(--font-h);font-size:1rem;font-weight:600;color:var(--lime);padding-bottom:max(16px,env(safe-area-inset-bottom,0px))}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap navin">
+    <a class="brandlink" href="#beranda">
+      <span class="logo" id="logo" aria-hidden="true">KKN</span>
+      <span class="bt"><b id="brand"></b><small id="kkn"></small></span>
+    </a>
+    <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="links">Menu</button>
+    <nav class="links-nav" id="links" aria-label="Navigasi utama">
+      <a href="#jalur">Jalur</a>
+      <a href="#materi">Materi</a>
+      <a href="#uji-pilah">Uji pilah</a>
+    </nav>
+    <a class="cta-sm" href="#materi">Mulai belajar</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="beranda">
+    <svg class="decor leaf1" viewBox="0 0 130 120" aria-hidden="true"><path d="M-10 20C30 -10 80 0 100 40c-30 20-70 20-110-20z" fill="#3DB54A"/><path d="M10 70C50 40 100 55 118 100c-34 14-80 6-108-30z" fill="#2E9E3F"/></svg>
+    <svg class="decor leaf2" viewBox="0 0 130 120" aria-hidden="true"><path d="M-10 20C30 -10 80 0 100 40c-30 20-70 20-110-20z" fill="#3DB54A"/><path d="M10 70C50 40 100 55 118 100c-34 14-80 6-108-30z" fill="#2E9E3F"/></svg>
+    <svg class="decor cloud1" viewBox="0 0 170 70" aria-hidden="true"><path d="M30 64a24 24 0 0 1 2-48 34 34 0 0 1 64-6 28 28 0 0 1 48 22 20 20 0 0 1-4 32z" fill="#fff"/></svg>
+    <svg class="decor cloud2" viewBox="0 0 170 70" aria-hidden="true"><path d="M30 64a24 24 0 0 1 2-48 34 34 0 0 1 64-6 28 28 0 0 1 48 22 20 20 0 0 1-4 32z" fill="#fff"/></svg>
+    <div class="wrap">
+      <div class="hero-copy">
+        <div class="signboard">
+          <span class="pill" id="pill"></span>
+          <h1>Pilah di rumah. Olah jadi <em>berguna.</em></h1>
+        </div>
+        <div class="cream-card">
+          <p class="lead">Cara mengolah sampah plastik dan organik, dikurasi dari YouTube, media, dan laporan pengabdian kampus. Pilih jalurmu, lalu buka sumber aslinya untuk panduan lengkap.</p>
+          <div class="btns">
+            <a class="btn p" href="#materi">Mulai belajar</a>
+            <a class="btn s" href="#uji-pilah">Coba uji pilah</a>
+          </div>
+          <div class="metrics" id="metrics"></div>
+        </div>
+      </div>
+      <div class="visual" aria-hidden="true">
+        <svg viewBox="0 0 440 380">
+          <circle cx="368" cy="62" r="34" fill="#FFD84D" stroke="#F2B705" stroke-width="4"/>
+          <g stroke="#FFD84D" stroke-width="6" stroke-linecap="round"><path d="M368 8v-0M368 4v10M368 110v10M314 62h-10M432 62h-10M330 24l-7-7M413 107l-7-7M406 24l7-7M323 107l7-7"/></g>
+          <ellipse cx="220" cy="352" rx="232" ry="52" fill="#5CC060"/>
+          <ellipse cx="220" cy="366" rx="232" ry="40" fill="#46AE4C"/>
+          <g class="bin-l">
+            <path d="M78 176h124l-11 144a14 14 0 0 1-14 13h-74a14 14 0 0 1-14-13z" fill="#3B8FEA" stroke="#17562F" stroke-width="5" stroke-linejoin="round"/>
+            <rect x="66" y="148" width="148" height="32" rx="13" fill="#2A6FC9" stroke="#17562F" stroke-width="5"/>
+            <rect x="122" y="130" width="36" height="20" rx="9" fill="#2A6FC9" stroke="#17562F" stroke-width="5"/>
+            <path d="M116 226q8-10 16 0M148 226q8-10 16 0" stroke="#17562F" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="108" cy="246" r="8" fill="#FF9FB0" opacity=".85"/><circle cx="172" cy="246" r="8" fill="#FF9FB0" opacity=".85"/>
+            <path d="M126 246q14 16 28 0" stroke="#17562F" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M140 282a14 14 0 1 1-12 21" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M120 300l8 8 8-12z" fill="#fff"/>
+          </g>
+          <g class="bin-r">
+            <path d="M246 152h126l-12 168a14 14 0 0 1-14 13h-74a14 14 0 0 1-14-13z" fill="#3DB54A" stroke="#17562F" stroke-width="5" stroke-linejoin="round"/>
+            <rect x="232" y="122" width="154" height="34" rx="13" fill="#2E9E3F" stroke="#17562F" stroke-width="5"/>
+            <rect x="288" y="104" width="42" height="22" rx="9" fill="#2E9E3F" stroke="#17562F" stroke-width="5"/>
+            <path d="M277 214q8-10 16 0M325 214q8-10 16 0" stroke="#17562F" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="266" cy="236" r="8" fill="#FF9FB0" opacity=".85"/><circle cx="352" cy="236" r="8" fill="#FF9FB0" opacity=".85"/>
+            <path d="M294 236q15 17 30 0" stroke="#17562F" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M309 304c-18 0-28-12-28-26 16 0 28 10 28 26zM309 304c18 0 28-12 28-26-16 0-28 10-28 26z" fill="#fff"/>
+          </g>
+        </svg>
+        <span class="chip-f a">Ecobrick</span>
+        <span class="chip-f b">Kompos</span>
+        <span class="chip-f c">Maggot BSF</span>
+      </div>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 44C200 90 420 6 720 44s520 40 720-8V80H0z" fill="#E9F6E0"/></svg>
+  </section>
+
+  <div class="wrap">
+    <section class="stats" aria-label="Angka rujukan">
+      <div class="stat"><b>68,5 jt ton</b><span>sampah nasional pada 2021, rumah tangga penyumbang terbesar</span><a href="https://www.antaranews.com/berita/2769797/lima-tips-kelola-sampah" target="_blank" rel="noopener noreferrer">Antara, data KLHK</a></div>
+      <div class="stat"><b>60–70%</b><span>isi sampah rumah tangga adalah organik, menurut kajian yang dikutip jurnal pengabdian</span><a href="https://journal.unimar-amni.ac.id/index.php/sejahtera/article/download/3002/2735/10958" target="_blank" rel="noopener noreferrer">Jurnal Unimar AMNI</a></div>
+      <div class="stat"><b>5,4 jt ton</b><span>sampah plastik per tahun di Indonesia, menurut jurnal pengabdian</span><a href="https://journal.unimma.ac.id/index.php/ce/article/download/2460/1337" target="_blank" rel="noopener noreferrer">Jurnal Unimma</a></div>
+    </section>
+  </div>
+
+  <section class="sec" id="jalur">
+    <div class="wrap">
+      <div class="sec-h"><h2>Dua jalur pengolahan</h2><p>Pilih jenis sampah yang ingin diolah. Katalog di bawah langsung menyesuaikan.</p></div>
+      <div class="lanes">
+        <button class="lane k" data-go="plastik">
+          <span class="lbl">ANORGANIK</span>
+          <span class="big">Plastik</span>
+          <span class="sub">Ecobrick, eco-paving, kerajinan botol</span>
+          <span class="go" data-count="plastik"></span>
+        </button>
+        <button class="lane h" data-go="organik">
+          <span class="lbl">ORGANIK</span>
+          <span class="big">Organik</span>
+          <span class="sub">Kompos, maggot, eco enzyme, biopori</span>
+          <span class="go" data-count="organik"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="materi" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-h"><h2>Pilih caranya</h2></div>
+      <div class="tools">
+        <div class="chips" role="group" aria-label="Saring jalur">
+          <button class="chip" data-f="semua" aria-pressed="true">Semua</button>
+          <button class="chip" data-f="plastik" aria-pressed="false">Plastik</button>
+          <button class="chip" data-f="organik" aria-pressed="false">Organik</button>
+          <button class="chip" data-f="dasar" aria-pressed="false">Dasar pemilahan</button>
+        </div>
+        <label class="search"><span hidden>Cari metode</span><input id="q" type="search" placeholder="Cari: kompos, maggot, ecobrick..."></label>
+        <button class="ghost" id="toggleAll" type="button">Buka semua</button>
+      </div>
+      <div class="count" id="count" aria-live="polite"></div>
+      <div class="list" id="list"></div>
+      <div class="empty" id="empty" hidden>Tidak ada metode yang cocok. Coba kata kunci lain.</div>
+    </div>
+  </section>
+
+  <section class="quizband" id="uji-pilah" aria-labelledby="qt">
+    <div class="wrap">
+      <div>
+        <h2 id="qt">Uji pilah</h2>
+        <p class="intro">Delapan barang, dua tong. Tap tong yang tepat dan lihat bisa diolah jadi apa.</p>
+      </div>
+      <div class="quiz">
+        <div class="qtop"><span id="qround"></span><span id="qscore"></span></div>
+        <div class="qitem" id="qitem"></div>
+        <div class="qbins">
+          <button class="qbin k" data-a="anorganik">ANORGANIK</button>
+          <button class="qbin h" data-a="organik">ORGANIK</button>
+        </div>
+        <p class="fb" id="qfb" aria-live="polite"></p>
+        <button class="next" id="qnext" hidden>Berikutnya</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="fb-name" id="fname"></div>
+        <p id="credit"></p>
+      </div>
+      <div>
+        <h4>Jelajahi</h4>
+        <ul>
+          <li><a href="#jalur">Jalur pengolahan</a></li>
+          <li><a href="#materi">Materi</a></li>
+          <li><a href="#uji-pilah">Uji pilah</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Catatan</h4>
+        <p>Semua video dan artikel milik pembuat aslinya. Tautan membuka halaman sumber di tab baru. Ikuti petunjuk keselamatan di sumber, terutama untuk peleburan plastik dan larutan fermentasi.</p>
+      </div>
+    </div>
+    <div class="fbar" id="fbar"></div>
+  </div>
+</footer>
+
+<script>
+/* ====== Ubah bagian ini untuk menyesuaikan situs ====== */
+const SITE = {
+  nama: "Pilah Olah Sampah",
+  kkn: "KKN UNIVERSITAS NAROTAMA · 2026",
+  kredit: "Disusun oleh tim KKN UNIVESITAS NAROTAMA sebagai kurasi materi edukasi pengolahan sampah.",
+  logo: "logo.png"   /* isi nama file logo, misalnya "logo.png", lalu unggah bersama index.html */
+};
+const yt = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+
+/* jenis = plastik | organik | dasar. Tambah kartu baru dengan menyalin salah satu blok. */
+const DATA = [
+  {
+    jenis:"plastik", judul:"Ecobrick",
+    ringkas:"Botol plastik diisi sampah plastik kering dan bersih, dipadatkan sampai tidak bisa ditekan lagi, lalu botol-botol disusun jadi kursi, meja, atau tempat sampah.",
+    meta:[["Bahan","Botol plastik, plastik kemasan bersih dan kering"],["Cocok untuk","Sekolah, RT, kegiatan warga"]],
+    video:[
+      ["Tutorial Pembuatan Ecobrick","https://www.youtube.com/watch?v=ExArYA2yLBc"],
+      ["Jangan asal buat ecobrick! Ini kiatnya","https://www.youtube.com/watch?v=LPdZZpluj9c"],
+      ["Ecobrick kursi dan meja dari botol limbah plastik","https://www.youtube.com/watch?v=iC6NkUrg_Nw"]
+    ],
+    baca:[
+      ["Kompas: Ecobrick, pengertian, cara membuat, dan manfaatnya","https://lestari.kompas.com/read/2023/06/07/140000386/ecobrick--pengertian-cara-membuat-dan-manfatnya"],
+      ["Good News from Indonesia: Mengenal ecobrick","https://www.goodnewsfromindonesia.id/ragam/belajar/mengenal-ecobrick"]
+    ],
+    cari:"tutorial ecobrick"
+  },
+  {
+    jenis:"plastik", judul:"Eco-paving dari plastik",
+    ringkas:"Plastik dipilah, dilebur pada suhu tertentu, dicampur pasir, lalu dicetak seperti paving. Di SMP Negeri 1 Mijen, delapan karung plastik seberat 20 kg menghasilkan tujuh paving.",
+    meta:[["Bahan","Plastik terpilah, pasir ayak, cetakan"],["Perhatian","Peleburan butuh tempat terbuka dan pendampingan orang yang paham"]],
+    video:[],
+    baca:[
+      ["Jurnal Kotawali (Demak): eco-paving dari sampah plastik","https://jurnal.demakkab.go.id/kotawali/article/download/6/4/62"],
+      ["Jurnal Pengamatan (Unpatti): pelatihan eco-paving di Desa Karangluas, KKN","https://ojs3.unpatti.ac.id/index.php/pengamatan/article/download/23010/12756/"],
+      ["Jurnal Unimma: paving block dan ecobrick di Magelang","https://journal.unimma.ac.id/index.php/ce/article/download/2460/1337"]
+    ],
+    cari:"cara membuat paving dari sampah plastik"
+  },
+  {
+    jenis:"plastik", judul:"Kerajinan botol dan tutup botol",
+    ringkas:"Botol dan tutup botol bisa jadi pot tanaman, celengan, bunga hias, sampai lembaran papan untuk nampan dan jam dinding. Cocok untuk pelatihan yang menghasilkan barang jual.",
+    meta:[["Bahan","Botol bekas, tutup botol, plastik detergen, kresek"],["Hasil","Pot, celengan, tas, hiasan"]],
+    video:[],
+    baca:[
+      ["RRI: pemanfaatan tutup botol bekas","https://rri.co.id/padang/berita-lain/2604085/pemanfaatan-tutup-botol-bekas-menghasilkan-berbagai-karya"],
+      ["Orami: kerajinan dari plastik kemasan dan kresek","https://www.orami.co.id/magazine/kerajinan-dari-plastik"],
+      ["Liputan6: 18 ide kerajinan dari botol plastik","https://www.liputan6.com/global/read/5390133/18-ide-kerajinan-unik-dan-kreatif-daur-ulang-botol-plastik-dari-barang-fungsional-hingga-mainan"]
+    ],
+    cari:"kerajinan dari botol plastik bekas"
+  },
+  {
+    jenis:"organik", judul:"Kompos rumah tangga",
+    ringkas:"Sisa dapur dicacah kecil, dicampur tanah dan arang sekam di wadah tertutup, boleh ditambah cairan EM4. Proses alami yang bisa berlangsung puluhan tahun dipercepat menjadi 1 sampai 3 bulan.",
+    meta:[["Bahan","Sisa sayur dan buah, tanah, arang sekam, EM4 (opsional)"],["Waktu","1–3 bulan"]],
+    video:[],
+    baca:[
+      ["Tirto: kompos dari daun dan sampah rumah tangga","https://tirto.id/cara-membuat-pupuk-kompos-dari-daun-dan-sampah-rumah-tangga-gvCX"],
+      ["Orami: cara membuat pupuk kompos","https://www.orami.co.id/magazine/cara-membuat-pupuk-kompos"],
+      ["Halodoc: kompos sederhana dan cepat di rumah","https://www.halodoc.com/artikel/cara-membuat-kompos-sederhana-dan-cepat-di-rumah"]
+    ],
+    cari:"cara membuat kompos dari sampah dapur"
+  },
+  {
+    jenis:"organik", judul:"Kompos keranjang Takakura",
+    ringkas:"Pengomposan di dalam keranjang, praktis untuk rumah dengan lahan sempit. Video di bawah menunjukkan cara membuat, memakai, dan memanen kompos dari keranjang Takakura.",
+    meta:[["Bahan","Keranjang atau karung, sampah dapur"],["Cocok untuk","Rumah tanpa halaman luas"]],
+    video:[
+      ["Cara mudah membuat kompos dengan karung sistem Takakura (Part 1)","https://www.youtube.com/watch?v=vralPxFfOKQ"],
+      ["DIY membuat keranjang Takakura sederhana","https://www.youtube.com/watch?v=z6E7n0OYmh8"],
+      ["Cara panen komposter Takakura","https://www.youtube.com/watch?v=sNUejfQiibA"]
+    ],
+    baca:[],
+    cari:"keranjang takakura kompos"
+  },
+  {
+    jenis:"organik", judul:"Budidaya maggot BSF",
+    ringkas:"Larva lalat Black Soldier Fly memakan sampah organik. Larvanya jadi pakan ikan dan unggas, sisa medianya (kasgot) bisa jadi media tanam. Lalat BSF tidak termasuk serangga penular penyakit. Di sebuah TPS 3R di Lombok, cara ini menurunkan limbah organik hingga 56%.",
+    meta:[["Hasil","Maggot, kasgot, lindi"],["Peluang","Pakan ternak dan ikan bernilai jual"]],
+    video:[
+      ["Cara budidaya maggot BSF skala rumahan untuk pemula, tanpa bau","https://www.youtube.com/watch?v=hVez6DBZ1p4"],
+      ["Cara sukses budidaya maggot BSF dari telur hingga siap panen","https://www.youtube.com/watch?v=ykonfniNGY0"],
+      ["Cara budidaya maggot bagi pemula skala rumahan","https://www.youtube.com/watch?v=unWhIEDKhcY"]
+    ],
+    baca:[
+      ["Mongabay: maggot, belatung kaya nutrisi","https://mongabay.co.id/2023/01/25/maggot-belatung-kaya-nutrisi-dan-bermanfaat-untuk-lingkungan/amp/"],
+      ["Jurnal Bakti Nusa (Unram): maggot BSF di TPS 3R","https://baktinusa.unram.ac.id/index.php/baktinusa/article/download/113/108/895"]
+    ],
+    cari:"budidaya maggot BSF pemula"
+  },
+  {
+    jenis:"organik", judul:"Eco enzyme",
+    ringkas:"Kulit buah dan sisa sayur difermentasi bersama gula dan air dalam wadah tertutup. Hasilnya cairan serbaguna untuk pembersih dan pupuk cair. Jangan menyiram tanaman dengan larutan murni, karena bisa mengasamkan tanah. Hindari wadah logam.",
+    meta:[["Bahan","Kulit buah dan sayur, gula merah, air, botol plastik"],["Takaran","Ikuti video, takaran berbeda tiap sumber"]],
+    video:[
+      ["Tutorial pembuatan eco enzyme, DLH Kota Semarang","https://www.youtube.com/watch?v=favqCBDvkwA"],
+      ["Tutorial lengkap cara membuat eco enzyme untuk pemula","https://www.youtube.com/watch?v=tuTGjltJb8s"],
+      ["Eco enzyme tanpa timbangan","https://www.youtube.com/watch?v=gz-I6wnXVdA"]
+    ],
+    baca:[
+      ["Good News from Indonesia: eco-enzyme, larutan multifungsi","https://www.goodnewsfromindonesia.id/2022/08/06/cara-membuat-eco-enzyme-larutan-multifungsi-penyelamat-bumi"],
+      ["ITS: mengajak warga membuat eco enzyme","https://www.its.ac.id/news/manfaatkan-sampah-organik-its-ajak-buat-eco-enzyme/"]
+    ],
+    cari:"cara membuat eco enzyme"
+  },
+  {
+    jenis:"organik", judul:"Lubang biopori",
+    ringkas:"Lubang silindris vertikal di tanah yang diisi sampah organik. Sampah terurai di dalamnya dan lubang membantu air meresap.",
+    meta:[["Bahan","Pipa atau bor biopori, sampah organik"],["Manfaat","Pengolahan sampah dan resapan air"]],
+    video:[],
+    baca:[
+      ["Kompas: mengolah sampah organik dengan biopori","https://lestari.kompas.com/read/2023/05/08/183000086/cara-mengolah-sampah-organik-dengan-biopori-lubang-penangkal-banjir-panen"]
+    ],
+    cari:"cara membuat lubang biopori"
+  },
+  {
+    jenis:"dasar", judul:"Prinsip 3R dan pemilahan",
+    ringkas:"Reduce, reuse, recycle: mulai dari mengurangi sampah, memakai ulang barang, baru mendaur ulang. Memilah organik dan anorganik di rumah mempermudah semua metode di halaman ini.",
+    meta:[["Mulai dari","Dua wadah terpisah di rumah"],["Skala desa","TPS 3R dan bank sampah"]],
+    video:[],
+    baca:[
+      ["Good News from Indonesia: pilah sampah, terapkan 3R","https://www.goodnewsfromindonesia.id/2024/11/26/pilah-sampah-pilah-masalah-terapkan-3r-kelola-sampah-dari-rumah"],
+      ["Antara: lima tips kelola sampah","https://www.antaranews.com/berita/2769797/lima-tips-kelola-sampah"],
+      ["WWF: SOP pemilahan di TPS 3R Kota Bogor (PDF)","https://plasticsmartcities.wwf.id/feature/article/rekomendasi-prosedur-operasional-pengelolaan-sampah-di-tps-3r-kota-bogor/download"]
+    ],
+    cari:"pemilahan sampah 3R di rumah"
+  }
+];
+
+/* barang untuk permainan Uji Pilah */
+const ITEMS = [
+  ["Botol plastik","anorganik","Bisa jadi ecobrick atau kerajinan."],
+  ["Kulit pisang","organik","Bahan kompos atau eco enzyme."],
+  ["Tutup botol","anorganik","Bisa disatukan jadi papan kerajinan."],
+  ["Nasi sisa","organik","Pakan larva maggot BSF atau bahan kompos."],
+  ["Plastik sachet kopi","anorganik","Bisa dianyam jadi tas belanja."],
+  ["Daun kering","organik","Bahan kompos, atau isian lubang biopori."],
+  ["Styrofoam","anorganik","Anorganik. Pisahkan dari sampah dapur."],
+  ["Ampas kopi","organik","Bahan kompos."],
+  ["Kulit telur","organik","Bahan kompos."],
+  ["Kaleng minuman","anorganik","Anorganik. Kumpulkan terpisah untuk didaur ulang."],
+  ["Kantong kresek bersih","anorganik","Bisa jadi isian ecobrick atau kerajinan."],
+  ["Kulit jeruk","organik","Bahan eco enzyme beraroma segar."]
+];
+/* ====== Selesai ====== */
+
+function el(tag, attrs, children){
+  const n = document.createElement(tag);
+  Object.entries(attrs||{}).forEach(([k,v])=>{ if(k==="text") n.textContent=v; else n.setAttribute(k,v); });
+  (children||[]).forEach(c=>n.appendChild(c));
+  return n;
+}
+const $ = id => document.getElementById(id);
+
+/* identitas */
+document.title = SITE.nama;
+$("brand").textContent = SITE.nama;
+$("kkn").textContent = SITE.kkn;
+$("pill").textContent = SITE.kkn;
+$("fname").textContent = SITE.nama;
+$("credit").textContent = SITE.kredit;
+$("fbar").textContent = SITE.kkn;
+if(SITE.logo){ $("logo").replaceChildren(el("img",{src:SITE.logo,alt:""})); }
+
+/* angka ringkas dihitung dari DATA */
+(function(){
+  const vid = DATA.reduce((n,d)=>n+d.video.length,0);
+  const art = DATA.reduce((n,d)=>n+d.baca.length,0);
+  $("metrics").replaceChildren(...[[DATA.length,"materi"],[vid,"video YouTube"],[art,"artikel dan jurnal"]].map(([n,t])=>el("div",{},[el("b",{text:String(n)}), el("span",{text:t})])));
+})();
+document.querySelectorAll("[data-count]").forEach(s=>{
+  const n = DATA.filter(d=>d.jenis===s.dataset.count).length;
+  s.textContent = "Lihat " + n + " cara";
+});
+
+/* menu seluler */
+const menu = $("menu"), nav = $("links");
+menu.addEventListener("click",()=>{
+  const open = nav.classList.toggle("open");
+  menu.setAttribute("aria-expanded", String(open));
+});
+nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{ nav.classList.remove("open"); menu.setAttribute("aria-expanded","false"); }));
+
+/* katalog */
+const LABEL = {plastik:"ANORGANIK", organik:"ORGANIK", dasar:"DASAR"};
+const list = $("list"), qEl = $("q"), countEl = $("count"), emptyEl = $("empty"), tAll = $("toggleAll");
+let filter = "semua";
+
+function linkList(title, items){
+  if(!items.length) return null;
+  const ul = el("ul",{}, items.map(([t,u])=>el("li",{},[el("a",{href:u,target:"_blank",rel:"noopener noreferrer",text:t})])));
+  return el("div",{},[el("h4",{text:title}), ul]);
+}
+function item(d){
+  const dl = el("dl",{}, d.meta.flatMap(([k,v])=>[el("dt",{text:k}), el("dd",{text:v})]));
+  const links = el("div",{class:"links"},[
+    linkList("Video YouTube", d.video),
+    linkList("Bacaan", d.baca),
+    el("a",{class:"more",href:yt(d.cari),target:"_blank",rel:"noopener noreferrer",text:"Cari video lain di YouTube ↗"})
+  ].filter(Boolean));
+  const peek = d.ringkas.split(". ")[0].replace(/\.$/,"") + ".";
+  return el("details",{class:"item "+d.jenis},[
+    el("summary",{},[
+      el("span",{class:"tag",text:LABEL[d.jenis]}),
+      el("span",{class:"head"},[el("h3",{text:d.judul}), el("span",{class:"peek",text:peek})]),
+      el("span",{class:"chev","aria-hidden":"true"})
+    ]),
+    el("div",{class:"body"},[el("div",{},[el("p",{text:d.ringkas}), dl]), links])
+  ]);
+}
+function render(){
+  const q = qEl.value.trim().toLowerCase();
+  const rows = DATA.filter(d=>(filter==="semua"||d.jenis===filter) &&
+    (!q || (d.judul+" "+d.ringkas+" "+d.meta.flat().join(" ")).toLowerCase().includes(q)));
+  list.replaceChildren(...rows.map(item));
+  countEl.textContent = rows.length + " dari " + DATA.length + " cara";
+  emptyEl.hidden = rows.length>0;
+  tAll.textContent = "Buka semua";
+}
+function setFilter(f){
+  filter = f;
+  document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", String(x.dataset.f===f)));
+  render();
+}
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>setFilter(b.dataset.f)));
+document.querySelectorAll(".lane").forEach(g=>g.addEventListener("click",()=>{
+  setFilter(g.dataset.go);
+  $("materi").scrollIntoView({behavior:"smooth",block:"start"});
+}));
+tAll.addEventListener("click",()=>{
+  const ds = [...list.querySelectorAll("details")];
+  const open = ds.some(d=>!d.open);
+  ds.forEach(d=>{ d.open = open; });
+  tAll.textContent = open ? "Tutup semua" : "Buka semua";
+});
+qEl.addEventListener("input", render);
+render();
+
+/* ---- Uji pilah ---- */
+const ROUNDS = 8;
+const qItem=$("qitem"), qFb=$("qfb"), qNext=$("qnext"), qRound=$("qround"), qScore=$("qscore"), qBins=document.querySelectorAll(".qbin");
+let deck, idx, score, answered;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function start(){ deck=shuffle(ITEMS).slice(0,ROUNDS); idx=0; score=0; show(); }
+function show(){
+  answered=false;
+  qItem.textContent = deck[idx][0];
+  qRound.textContent = "Barang " + (idx+1) + " / " + ROUNDS;
+  qScore.textContent = "Skor " + score;
+  qFb.textContent=""; qFb.className="fb";
+  qNext.hidden=true; qNext.textContent="Berikutnya";
+  qBins.forEach(b=>b.disabled=false);
+}
+function answer(a){
+  if(answered) return; answered=true;
+  const [nama,benar,tip]=deck[idx], ok=a===benar;
+  if(ok) score++;
+  qScore.textContent="Skor "+score;
+  qFb.className="fb "+(ok?"ok":"no");
+  qFb.replaceChildren(el("strong",{text: ok?"Tepat!":"Belum tepat."}), document.createTextNode(nama+" masuk "+benar+". "+tip));
+  qBins.forEach(b=>b.disabled=true);
+  qNext.hidden=false;
+  qNext.textContent = idx===ROUNDS-1 ? "Lihat hasil" : "Berikutnya";
+}
+function finish(){
+  qItem.textContent = score + " / " + ROUNDS;
+  qRound.textContent = "Selesai";
+  qFb.className="fb";
+  qFb.textContent = score>=7 ? "Jago memilah. Ajak tetangga mencoba juga." : score>=4 ? "Lumayan. Buka kartu di atas untuk tahu bahan yang sering tertukar." : "Tidak apa-apa, ayo coba lagi dan baca kartu di atas.";
+  qBins.forEach(b=>b.disabled=true);
+  qNext.hidden=false; qNext.textContent="Main lagi";
+}
+qBins.forEach(b=>b.addEventListener("click",()=>answer(b.dataset.a)));
+qNext.addEventListener("click",()=>{
+  if(qNext.textContent==="Main lagi"){ start(); return; }
+  if(idx===ROUNDS-1){ finish(); return; }
+  idx++; show();
+});
+start();
+</script>
+</body>
+</html>
